@@ -63,7 +63,7 @@ async function run() {
         // add product
         app.post("/ebike", verifyToken, async (req, res) => {
             // console.log(req.headers.authorization);
-            // console.log();
+            
             const ebikeData = req.body;
             const result = await ebikeCollection.insertOne(ebikeData);
             res.send(result);
