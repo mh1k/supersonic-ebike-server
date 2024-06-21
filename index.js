@@ -17,7 +17,7 @@ function createToken(user) {
         },
         'secret',
         { expiresIn: '7d' });
-
+        console.log("new token,,,,,,",token);
     return token;
 
 
@@ -29,7 +29,7 @@ function verifyToken(req, res, next) {
 
     const token = req.headers.authorization.split(" ")[1];
     const verify = jwt.verify(token, "secret")
-    console.log("you are", verify);
+    console.log("you are,,,,,,", verify);
     // console.log("sdsfdf",token);
     if (!verify?.email) {
         return res.send("you are not authorized")
