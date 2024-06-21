@@ -74,9 +74,9 @@ async function run() {
             // console.log(filter);
             if (filter.search) {
                 const query = {
-
                     name: { $regex: filter.search, $options: 'i' }
                 };
+                
                 const ebikeData = ebikeCollection.find(query);
                 const result = await ebikeData.toArray();
                 return res.send(result);
