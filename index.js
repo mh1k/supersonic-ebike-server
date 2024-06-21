@@ -122,7 +122,7 @@ async function run() {
                 return res.send({
                     status: "success",
                     message: "login successfully",
-                    token
+                    token: token
                 })
             }
             const result = await usersCollection.insertOne(user);
