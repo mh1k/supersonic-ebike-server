@@ -71,15 +71,20 @@ async function run() {
         // get the ebike data
         app.get("/ebike", async (req, res) => {
             const filter = req.query;
-            console.log(filter);
-            const query = {
-                // price: { $lt: 150, $gt: 50 }
-                // db.InspirationalWomen.find({first_name: { $regex: /Harriet/i} })
-                name: {$regex: filter.search, $options: 'i'}
-            };
-            const ebikeData = ebikeCollection.find(query);
+            // console.log(filter);
+            if (filter.search) {
+                const query = {
+
+                    name: { $regex: filter.search, $options: 'i' }
+                };
+                const ebikeData = ebikeCollection.find(query);
+                const result = await ebikeData.toArray();
+                return res.send(result);
+            }
+            const ebikeData = ebikeCollection.find({});
             const result = await ebikeData.toArray();
-            res.send(result);
+            res.send(result)
+
         });
 
         //get single data
@@ -122,7 +127,7 @@ async function run() {
             // const options = { upsert: true }
             // // const updateDoc = { $set: user }
             const token = createToken(user);
-            
+
             const isUserExist = await usersCollection.findOne({ email: user?.email })
             if (isUserExist?._id) {
                 return res.send({
@@ -135,7 +140,7 @@ async function run() {
             console.log("got new user", req.body);
             console.log("added user", result);
             console.log("account token pass", token);
-            res.send({token})
+            res.send({ token })
 
         })
 
