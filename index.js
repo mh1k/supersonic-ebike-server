@@ -17,7 +17,6 @@ function createToken(user) {
         },
         'secret',
         { expiresIn: '7d' });
-        console.log("new token,,,,,,",token);
     return token;
 
 
@@ -63,7 +62,7 @@ async function run() {
         // add product
         app.post("/ebike", verifyToken, async (req, res) => {
             // console.log(req.headers.authorization);
-            
+
             const ebikeData = req.body;
             const result = await ebikeCollection.insertOne(ebikeData);
             res.send(result);
@@ -71,7 +70,14 @@ async function run() {
 
         // get the ebike data
         app.get("/ebike", async (req, res) => {
-            const ebikeData = ebikeCollection.find({});
+            const filter = req.query;
+            console.log(filter);
+            const query = {
+                // price: { $lt: 150, $gt: 50 }
+                // db.InspirationalWomen.find({first_name: { $regex: /Harriet/i} })
+                name: {$regex: filter.search, $options: 'i'}
+            };
+            const ebikeData = ebikeCollection.find(query);
             const result = await ebikeData.toArray();
             res.send(result);
         });
@@ -116,19 +122,20 @@ async function run() {
             // const options = { upsert: true }
             // // const updateDoc = { $set: user }
             const token = createToken(user);
-            console.log(token);
+            
             const isUserExist = await usersCollection.findOne({ email: user?.email })
             if (isUserExist?._id) {
                 return res.send({
                     status: "success",
                     message: "login successfully",
-                    token: token
+                    token
                 })
             }
             const result = await usersCollection.insertOne(user);
             console.log("got new user", req.body);
             console.log("added user", result);
-            // res.send(token)
+            console.log("account token pass", token);
+            res.send({token})
 
         })
 
